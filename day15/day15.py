@@ -23,6 +23,7 @@ from collections import defaultdict
         
 class Conway2D:
     def __init__(self, lines):
+        # nothing works with with lambda having default value of 100 
         self.state = defaultdict(lambda:10)
         for y, linex in enumerate(lines):
             for x, state in enumerate(linex):
