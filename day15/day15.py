@@ -20,7 +20,8 @@ if not os.path.exists("input"):
 class Conway2D:
     def __init__(self, lines):
         # nothing works with with lambda having default value of 100ish or larger
-        self.state = {}#defaultdict(lambda:10)
+        # with the bug fixed this can be whatever as expected :)
+        self.state = defaultdict(lambda:10000)
         for y, linex in enumerate(lines):
             for x, state in enumerate(linex):
                 self.state[(x, y)] = int(state)
@@ -70,7 +71,8 @@ class Conway2D:
         if n==4:
             nbs = [(xx,y) for xx in (x-1, x+1)] +\
                 [(x,yy) for yy in (y-1, y+1)]
-            return [nb for nb in nbs if 0<=nb[0]<self.size and 0<=nb[1]<self.size]
+            # return [nb for nb in nbs if 0<=nb[0]<self.size and 0<=nb[1]<self.size]
+            return [nb for nb in nbs if self[nb]<10]
         if n==6:
             return [(xx, yy)
                     for xx in (x-1, x, x+1)
@@ -83,10 +85,10 @@ class Conway2D:
     def path_risk(self, path):
         return sum([self[cell] for cell in path]) - self[(0, 0)]
 
-    def worst_case_risk(self, start, end=None):
+    def best_case_risk(self, start, end=None):
         if not end:
             end = (self.size-1, self.size-1)
-        return 9*self.distance(start, end)
+        return 1*self.distance(start=start, end=end)
 
     def reconstruct_path(self, came_from, current):
         path = [current]
@@ -109,14 +111,14 @@ class Conway2D:
         g_score = defaultdict(lambda:1e9)
         g_score[start] = 0
 
-        h = self.worst_case_risk
+        h = self.best_case_risk
         f_score = {}
-        f_score[start] = h(start)
+        f_score[start] = h(start=start)
         while len(open_set):
             current = heapq.heappop(open_set)[1]
             if current == goal:
                 print(g_score[current])
-                return self.reconstruct_path(came_from, current)
+                return self.reconstruct_path(came_from=came_from, current=current)
 
             for nb in self.neighbours(*current, n=4):
                 tentative_g_score = g_score[current] + self[nb]
