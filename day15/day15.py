@@ -1,4 +1,7 @@
 # see https://adventofcode.com/2021/day/15
+import os
+import heapq
+from collections import defaultdict
 
 try:
     from aocd import data, lines, submit
@@ -10,13 +13,9 @@ except ImportError:
     with open("input","r") as f:
         lines = list(map(str.strip, f.readlines()))
 
-import os
 if not os.path.exists("input"):
     with open("input","w") as f:
         f.write(data)
-
-import heapq
-from collections import defaultdict
         
 class Conway2D:
     def __init__(self, lines):
