@@ -14,11 +14,6 @@ import os
 if not os.path.exists("input"):
     with open("input","w") as f:
         f.write(data)
-        
-import os
-if not os.path.exists("input"):
-    with open("input","w") as f:
-        f.write(data)
 
 import heapq
 from collections import defaultdict
@@ -26,7 +21,7 @@ from collections import defaultdict
 class Conway2D:
     def __init__(self, lines):
         # nothing works with with lambda having default value of 100ish or larger
-        self.state = defaultdict(lambda:10)
+        self.state = {}#defaultdict(lambda:10)
         for y, linex in enumerate(lines):
             for x, state in enumerate(linex):
                 self.state[(x, y)] = int(state)
@@ -76,14 +71,14 @@ class Conway2D:
         if n==4:
             nbs = [(xx,y) for xx in (x-1, x+1)] +\
                 [(x,yy) for yy in (y-1, y+1)]
-            return [nb for nb in nbs if self[nb]<10]
+            return [nb for nb in nbs if 0<=nb[0]<self.size and 0<=nb[1]<self.size]
         if n==6:
             return [(xx, yy)
                     for xx in (x-1, x, x+1)
                     for yy in (y-1, y, y+1)
                     if (x, y) != (xx, yy)]
 
-    def distance(start, end, metric="manhattan"):
+    def distance(self, start, end, metric="manhattan"):
         return abs(start[0]-end[0]) + abs(start[1]-end[1])
         
     def path_risk(self, path):
