@@ -1,3 +1,5 @@
+# see https://adventofcode.com/2021/day/15
+
 try:
     from aocd import data, lines, submit
     from aocd import numbers
@@ -23,13 +25,12 @@ from collections import defaultdict
         
 class Conway2D:
     def __init__(self, lines):
-        # nothing works with with lambda having default value of 100 
+        # nothing works with with lambda having default value of 100ish or larger
         self.state = defaultdict(lambda:10)
         for y, linex in enumerate(lines):
             for x, state in enumerate(linex):
                 self.state[(x, y)] = int(state)
         self.size = len(lines)
-        # neighbours = [self.neighbours(*n) for n in self]
 
     def extend(self, n=5):
         #right and down
@@ -40,7 +41,6 @@ class Conway2D:
                         wrap = (self[(x, y)] + newx + newy) // 10
                         self[(x + newx*self.size, y + newy*self.size)] = ((self[(x, y)] + newx + newy) % 10) + wrap
         self.size *= n
-        # neighbours = [self.neighbours(*n) for n in self]
         
     def __iter__(self):
         for x in range(self.size):
@@ -103,6 +103,7 @@ class Conway2D:
         return path
     
     def A_star(self, goal=None):
+        # see https://en.wikipedia.org/wiki/A*_search_algorithm
         start = (0, 0)
         if not goal:
             goal = (self.size-1, self.size-1)
@@ -134,7 +135,7 @@ class Conway2D:
 
         return []
             
-
+# correct answer is 390
 def part1(lines=lines):
     cw = Conway2D(lines)
     return cw.path_risk(cw.A_star())
@@ -142,6 +143,7 @@ def part1(lines=lines):
 cw = Conway2D(lines)
 # cw.extend(5)
 
+# correct answer is 2814
 def part2(lines=lines):
     cw = Conway2D(lines)
     cw.extend(5)
