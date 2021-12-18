@@ -85,10 +85,6 @@ class SnailNumber(BinaryNode):
             return None
         next_right = right_cand.get_leftest_leaf()
         return next_right
-        # if next_right == self:
-        #     return None
-        # else:
-        #     return next_right
         
     def next_left(self):
         left_cand = self.parent
@@ -102,10 +98,6 @@ class SnailNumber(BinaryNode):
             return None
         next_left = left_cand.get_rightest_leaf()
         return next_left
-        # if next_left == self:
-        #     return None
-        # else:
-        #     return next_left
         
     def explode(self):
         assert self.end_branch()
@@ -115,9 +107,6 @@ class SnailNumber(BinaryNode):
             next_left.value += self.left.value
         if next_right:
             next_right.value += self.right.value
-        if not (next_left and next_right):
-            # this node becomes an end
-            pass
         self.value = 0
 
         # clean up children
@@ -126,20 +115,6 @@ class SnailNumber(BinaryNode):
         self.left = None
         self.right = None
         
-        # if next_left and next_right:
-        #     # this node is dangling and needs to be collapsed up
-        #     if self.parent.left == self:
-        #         # this is the left child
-        #         # copy val of right and del it and this
-        #         self.parent.value = self.parent.right.value
-        #         del self.parent.right
-        #         self.parent.right = None
-        #     else:
-        #         # reverse
-        #         self.parent.value = self.parent.left.value
-        #         self.parent.left = None
-        #         del self
-
     def explode_pass(self):
         current = self.get_leftest_leaf()
         while current:
