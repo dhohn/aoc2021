@@ -78,9 +78,8 @@ class SnailNumber(BinaryNode):
         right_cand = self.parent
         while right_cand.get_rightest_leaf() == self and right_cand.parent:
             right_cand = right_cand.parent
-        else:
-            if right_cand.right:
-                right_cand = right_cand.right
+        if right_cand.right:
+            right_cand = right_cand.right
         if right_cand.get_rightest_leaf() == self:
             return None
         next_right = right_cand.get_leftest_leaf()
@@ -90,9 +89,8 @@ class SnailNumber(BinaryNode):
         left_cand = self.parent
         while left_cand.get_leftest_leaf() == self and left_cand.parent:
             left_cand = left_cand.parent
-        else:
-            if left_cand.left:
-                left_cand = left_cand.left
+        if left_cand.left:
+            left_cand = left_cand.left
         if left_cand.get_leftest_leaf() == self:
             # means we came from left and there no next left
             return None
@@ -115,11 +113,29 @@ class SnailNumber(BinaryNode):
             return next.go_right(self)
         else:
             return None
+
+    def go_left(self, source=None):
+        # recursive version... might have been easier
+        if not source:
+            return self.parent.go_left(self)
+        if self.leaf():
+            return self
+        if source == self.left:
+            next = self.parent
+        if source == self.right:
+            next = self.left
+        if source == self.parent:
+            next = self.right
+        if next:
+            return next.go_left(self)
+        else:
+            return None
+
         
     def explode(self):
         assert self.end_branch()
-        next_left = self.left.next_left()
-        next_right = self.right.next_right()
+        next_left = self.left.go_left()
+        next_right = self.right.go_right()
         if next_left:
             next_left.value += self.left.value
         if next_right:
@@ -140,7 +156,7 @@ class SnailNumber(BinaryNode):
                 # print(f"explode{current.parent}")
                 current.parent.explode()
                 return True
-            current = current.next_right()
+            current = current.go_right()
         return False
 
     def split_pass(self):
@@ -150,7 +166,7 @@ class SnailNumber(BinaryNode):
                 # print(f"split{current}")
                 current.split()
                 return True
-            current = current.next_right()
+            current = current.go_right()
         return False
 
     
@@ -162,16 +178,19 @@ class SnailNumber(BinaryNode):
             pass
 
     def __add__(self, other):
-        self_list = eval(self.__repr__())
-        other_list = eval(other.__repr__())
-        self_list = [self_list, other_list]
-        n = SnailNumber(str(self_list))
-        n.reduce()
-        return n
+        new = SnailNumber(0)
+        new.value = None
+        new.left = self
+        new.right = other
+        self.parent = new
+        other.parent = new
+        
+        new.reduce()
+        return new
 
     def __iadd__(self, other):
-        n = self + other
-        self = n
+        new = self + other
+        self = new
         return self
 
 test1 = """[1,1]
