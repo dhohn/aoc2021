@@ -98,6 +98,23 @@ class SnailNumber(BinaryNode):
             return None
         next_left = left_cand.get_rightest_leaf()
         return next_left
+
+    def go_right(self, source=None):
+        # recursive version of next_right... might have been easier
+        if not source:
+            return self.parent.go_right(self)
+        if self.leaf():
+            return self
+        if source == self.left:
+            next = self.right
+        if source == self.right:
+            next = self.parent
+        if source == self.parent:
+            next = self.left
+        if next:
+            return next.go_right(self)
+        else:
+            return None
         
     def explode(self):
         assert self.end_branch()
