@@ -97,10 +97,11 @@ class SnailNumber(BinaryNode):
         next_left = left_cand.get_rightest_leaf()
         return next_left
 
-    def go_right(self, source=None):
+    def cw(self, source=None):
         # recursive version of next_right... might have been easier
+        # aka go clockwise along tree
         if not source:
-            return self.parent.go_right(self)
+            return self.parent.cw(self)
         if self.leaf():
             return self
         if source == self.left:
@@ -110,14 +111,15 @@ class SnailNumber(BinaryNode):
         if source == self.parent:
             next = self.left
         if next:
-            return next.go_right(self)
+            return next.cw(self)
         else:
             return None
 
-    def go_left(self, source=None):
+    def ccw(self, source=None):
         # recursive version... might have been easier
+        # counter clockwise
         if not source:
-            return self.parent.go_left(self)
+            return self.parent.ccw(self)
         if self.leaf():
             return self
         if source == self.left:
@@ -127,15 +129,15 @@ class SnailNumber(BinaryNode):
         if source == self.parent:
             next = self.right
         if next:
-            return next.go_left(self)
+            return next.ccw(self)
         else:
             return None
 
         
     def explode(self):
         assert self.end_branch()
-        next_left = self.left.go_left()
-        next_right = self.right.go_right()
+        next_left = self.left.ccw()
+        next_right = self.right.cw()
         if next_left:
             next_left.value += self.left.value
         if next_right:
@@ -156,7 +158,7 @@ class SnailNumber(BinaryNode):
                 # print(f"explode{current.parent}")
                 current.parent.explode()
                 return True
-            current = current.go_right()
+            current = current.cw()
         return False
 
     def split_pass(self):
@@ -166,7 +168,7 @@ class SnailNumber(BinaryNode):
                 # print(f"split{current}")
                 current.split()
                 return True
-            current = current.go_right()
+            current = current.cw()
         return False
 
     
