@@ -106,7 +106,7 @@ class Conway2D:
         for _ in range(n):
             self.steps += 1
             # save state
-            newstate = copy.deepcopy(self.state)
+            newstate = copy.copy(self.state)
 
             # make new state. go right
             for cell in list(self.state.keys()):
@@ -121,12 +121,12 @@ class Conway2D:
             self.state = newstate
 
             # save state
-            newstate = copy.deepcopy(self.state)
+            newstate = copy.copy(self.state)
 
             # make new state. go down
             for cell in list(self.state.keys()):
                 nb = self.neighbours(*cell, "seacucumber")[0]
-                if self[cell] == "v" and self[nb] == ".":
+                if self[cell] == "v" and self.inactive(*nb):
                     newstate[nb] = newstate[cell]
                     newstate[cell] = "."
                     changed = True
@@ -158,3 +158,5 @@ def part2(lines=lines):
 
 
 
+if __name__ == "__main__":
+    print(f"a: {part1(lines)}")
