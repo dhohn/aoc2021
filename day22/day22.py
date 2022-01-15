@@ -62,20 +62,21 @@ class Conway3D:
 
     def count_compressed(self):
         sum = 0
-        it = np.nditer(self.state, flags=['multi_index'])
-        for val in it:
+        # it = np.nditer(self.state, flags=['multi_index'])
+        for key in np.transpose(self.state.nonzero()):
+        # for val in it:
             # print("%d <%s>" % (val, it.multi_index), end=' ')
         # for key, val in self.state.items():
             # print(key, val)
             # print(self.x_coords[key[0]], self.y_coords[key[1]], self.z_coords[key[2]])
             # print(self.x_coords[key[0]+1], self.y_coords[key[1]+1], self.z_coords[key[2]+1])
-            if val:
-                key = it.multi_index
-                volume = (self.x_coords[key[0]+1]-self.x_coords[key[0]])*\
-                         (self.y_coords[key[1]+1]-self.y_coords[key[1]])*\
-                         (self.z_coords[key[2]+1]-self.z_coords[key[2]])
-                # print(f"{volume=}")
-                sum += volume
+            # if val:
+                # key = it.multi_index
+            volume = (self.x_coords[key[0]+1]-self.x_coords[key[0]])*\
+                     (self.y_coords[key[1]+1]-self.y_coords[key[1]])*\
+                     (self.z_coords[key[2]+1]-self.z_coords[key[2]])
+            # print(f"{volume=}")
+            sum += volume
         return sum
 
     def step(self, instruction):
@@ -111,7 +112,7 @@ def part1(lines=lines):
     cw = Conway3D([])
     for line in lines:
         cw.step(line)
-
+        
     print(f"{cw.count()= }")
         
     return cw.count()
@@ -122,16 +123,18 @@ def part2(lines=lines):
     for line in lines:
         cw.step_compressed(line)
 
-    print(f"{cw.count_compressed()= }")
+    sum = cw.count_compressed()
+    print(f"{sum= }")
 
-    return cw.count_compressed()
+    return sum
 
 # submit(part1(), part="a")
 # submit(part2(), part="b")
 
 if __name__=="__main__":
-    part1(lines)
+    # part1(lines)
     part2(lines)
+    pass
 
 
 
